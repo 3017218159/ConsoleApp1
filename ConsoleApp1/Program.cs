@@ -4,6 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Gma.QrCodeNet.Encoding;
+using Gma.QrCodeNet.Encoding.Windows.Render;
+using System.IO;
+using System.Net;
+using System.Drawing.Imaging;
+using System.Drawing;
 
 namespace ConsoleApp1
 {
@@ -11,10 +16,25 @@ namespace ConsoleApp1
     {
         static void Main(string[] args)
         {
-            //首先设置命令行参数的限制条件（此处设为只允许输入英文，输入错误会提示并退出）
+            //设置命令行参数的限制条件（此处设为只允许输入英文，输入错误会提示并退出）
             if(args.Length == 0)//命令行参数不可为空
             {
                 Console.WriteLine("You cannot input no words");
+            }
+            //判断命令行是否为文件目录
+            else if (args[0][0] == '-' && args[0][1] == 'f')
+            {
+                if (args[0].Length <= 2)
+                {
+                    Console.WriteLine("Please input a file name");
+                }
+                //读取.txt文件并将每行文字生成一个二维码，保存为.png
+                else
+                {
+                    string fileName = args[0].Substring(2);//去掉前两位即"-f"
+                    string[] str = File.ReadAllLines(fileName);//每行读一次
+                    CreateQrCode_txt(fileName, str);
+                }
             }
             else if(args.Length > 20)//命令行参数长度不可超过二十
             {
@@ -79,6 +99,38 @@ namespace ConsoleApp1
                     Console.ResetColor();
                 }
             }
+        }
+
+        /// <summary>
+        /// 将字符串数组转化为二维码
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="str"></param>
+        public static void CreateQrCode_txt(string fileName, string[] str)
+        {
+            for(int i=0; i<str.Length; i++)
+            {
+                CreateQrCode_strToPng(fileName, str[i], i);
+            }
+        }
+
+        /// <summary>
+        /// 将字符串转化为二维码图片
+        /// </summary>
+        /// <param name="fileName"></param>
+        /// <param name="str"></param>
+        /// <param name="image_num"></param>
+        public static void CreateQrCode_strToPng(string fileName, string str, int image_num)
+        {
+            QrEncoder qrEncoder = new QrEncoder(ErrorCorrectionLevel.H);//QrCode纠错等级
+            QrCode qrCode = qrEncoder.Encode(str);//生成QrCode
+            GraphicsRenderer graphicsRenderer = new GraphicsRenderer(new FixedModuleSize(5, QuietZoneModules.Two), Brushes.Black, Brushes.White);
+
+            MemoryStream ms = new MemoryStream();
+            graphicsRenderer.WriteToStream(qrCode.Matrix, ImageFormat.Png, ms);
+            Image img = Image.FromStream(ms);
+            img.Save(image_num + ".png");
+            Console.WriteLine("已经生成图片"+ image_num);
         }
     }
 }
