@@ -32,8 +32,21 @@ namespace ConsoleApp1
                 else
                 {
                     string fileName = args[0].Substring(2);//去掉前两位即"-f"
-                    string[] str = File.ReadAllLines(fileName);//每行读一次
-                    CreateQrCode_txt(fileName, str);
+                    //若文件存在并不为空，生成二维码，若文件不存在，则创建文件
+                    if (File.Exists(fileName))
+                    {
+                        string[] str = File.ReadAllLines(fileName);//每行读一次
+                        if (str.Length == 0)
+                        {
+                            Console.WriteLine("文件为空");
+                        }
+                        CreateQrCode_txt(fileName, str);
+                    }
+                    else
+                    {
+                        File.Create(fileName);
+                        Console.WriteLine("文件不存在，已自动生成");
+                    }
                 }
             }
             else if(args.Length > 20)//命令行参数长度不可超过二十
@@ -125,7 +138,7 @@ namespace ConsoleApp1
             QrEncoder qrEncoder = new QrEncoder(ErrorCorrectionLevel.H);//QrCode纠错等级
             QrCode qrCode = qrEncoder.Encode(str);//生成QrCode
             GraphicsRenderer graphicsRenderer = new GraphicsRenderer(new FixedModuleSize(5, QuietZoneModules.Two), Brushes.Black, Brushes.White);
-
+            //将二维码保存为png，保存至当前目录下，并输出提示消息
             MemoryStream ms = new MemoryStream();
             graphicsRenderer.WriteToStream(qrCode.Matrix, ImageFormat.Png, ms);
             Image img = Image.FromStream(ms);
