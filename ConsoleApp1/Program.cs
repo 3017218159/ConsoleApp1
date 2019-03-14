@@ -32,7 +32,7 @@ namespace ConsoleApp1
                 else
                 {
                     string fileName = args[0].Substring(2);//去掉前两位即"-f"
-                    //若文件存在并不为空，生成二维码，若文件不存在，则创建文件
+                    //若文件存在并不为空，生成二维码，若文件不存在，则创建文件(文件编码方式必须为Unicode)
                     if (File.Exists(fileName))
                     {
                         string[] str = File.ReadAllLines(fileName);//每行读一次
