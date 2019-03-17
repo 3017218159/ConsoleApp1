@@ -123,7 +123,7 @@ namespace ConsoleApp1
         {
             for(int i=0; i<str.Length; i++)
             {
-                CreateQrCode_strToPng(fileName, str[i], i);
+                CreateQrCode_strToPng(fileName, str[i], i+1);
             }
         }
 
@@ -142,8 +142,10 @@ namespace ConsoleApp1
             MemoryStream ms = new MemoryStream();
             graphicsRenderer.WriteToStream(qrCode.Matrix, ImageFormat.Png, ms);
             Image img = Image.FromStream(ms);
-            img.Save(image_num + ".png");
-            Console.WriteLine("已经生成图片"+ image_num);
+            string num = "00";
+            num = num + image_num;
+            img.Save(num.Substring(num.Length-3, 3) + ".png");
+            Console.WriteLine("已经生成图片"+ num.Substring(num.Length - 3, 3));
         }
     }
 }
