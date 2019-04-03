@@ -22,9 +22,17 @@ namespace ConsoleApp1
                 Console.WriteLine("You cannot input no words");
             }
             //判断命令行是否为文件目录
-            else if (args[0][0] == '-' && args[0][1] == 'f')
+            else if (args[0][0] == '-')
             {
-                if (args[0].Length <= 2)
+                if (args[0].Length <= 1)
+                {
+                    Console.WriteLine("You must input a command");
+                }
+                else if (args[0][1] != 'f')
+                {
+                    Console.WriteLine("Please input a correct command");
+                }
+                else if (args[0].Length <= 2)
                 {
                     Console.WriteLine("Please input a file name");
                 }
