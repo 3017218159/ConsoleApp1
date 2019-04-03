@@ -11,7 +11,7 @@
 对于给定的信息生成的二维码，用其他设备可以准确扫描到正确信息；  
 对于给定txt文件，只能识别Unicode编码的信息。  
 # 三、代码总量
-151行
+151行 <font color=red>=> 159行</font>
 # 四、工作时间
 3月12日-3月17日
 # 五、知识点总结
@@ -29,6 +29,9 @@
    3.只允许输入英文  
 具体代码如下：  
 ![image](https://github.com/3017218159/ConsoleApp1/blob/master/2.png)  
+### <font color="red">错误更改</font>
+改正参数只有-导致的异常终止错误，修改代码： 
+![image](https://github.com/3017218159/ConsoleApp1/blob/master/9.png) 
 ## 步骤二
 命令行参数满足自定义条件之后，开始着手生成二维码  
 首先安装QRCode.NET程序包，在命名空间引用Gma.QrCodeNet.Encoding  
